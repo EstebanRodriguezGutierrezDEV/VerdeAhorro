@@ -212,12 +212,22 @@ export function saveSecureSession(user) {
  * Recupera la sesión validando integridad y expiración.
  * Devuelve null si la sesión es inválida o ha expirado.
  */
+/**
+ * Recupera la sesión validando integridad y expiración.
+ * Devuelve null si la sesión es inválida o ha expirado.
+ */
 export function getSecureSession() {
   try {
     const raw = localStorage.getItem(SESSION_KEY);
-    const timestamp = parseInt(localStorage.getItem(SESSION_TIMESTAMP_KEY) || '0', 10);
+    let timestamp = parseInt(localStorage.getItem(SESSION_TIMESTAMP_KEY) || '0', 10);
 
-    if (!raw || !timestamp) return null;
+    if (!raw) return null;
+
+    // Si no hay timestamp previo (sesión existente), asignarlo ahora
+    if (!timestamp) {
+      timestamp = Date.now();
+      localStorage.setItem(SESSION_TIMESTAMP_KEY, timestamp.toString());
+    }
 
     // Verificar expiración (24h)
     if (Date.now() - timestamp > SESSION_MAX_AGE_MS) {
@@ -362,28 +372,18 @@ export function protectForm(formId) {
 
 /**
  * Detecta si la página está cargada dentro de un iframe externo (clickjacking).
- * Si lo detecta, redirige a la página real.
+ * Ignora el entorno de desarrollo local para permitir previews e iFrames de desarrollo.
  */
 export function preventClickjacking() {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return; // Permitir iFrames en entorno de desarrollo local
+  }
+
   try {
     if (window.self !== window.top) {
-      // Estamos en un iframe — posible clickjacking
-      document.body.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;height:100vh;
-                    font-family:system-ui;text-align:center;background:#0F172A;color:#fff;">
-          <div>
-            <h1 style="font-size:2rem;margin-bottom:1rem;">⚠️ Acceso no permitido</h1>
-            <p>Esta página no puede cargarse dentro de otro sitio web.</p>
-            <a href="${window.location.href}" target="_top"
-               style="color:#10B981;margin-top:1rem;display:inline-block;">
-              Ir a VerdeAhorro directamente →
-            </a>
-          </div>
-        </div>`;
       window.top.location = window.self.location;
     }
   } catch (e) {
-    // Si no podemos acceder a window.top, definitivamente estamos en un iframe de otro dominio
     document.body.innerHTML = '';
   }
 }

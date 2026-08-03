@@ -10,18 +10,6 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
-    <meta http-equiv="Content-Security-Policy" content="
-      default-src 'self';
-      script-src 'self';
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com;
-      img-src 'self' data: blob:;
-      connect-src 'self' https://*.supabase.co;
-      frame-ancestors 'none';
-      base-uri 'self';
-      form-action 'self';
-    " />
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,15 +17,30 @@
   </head>
   <body class="dashboard-page">
     <div id="app">
-      <!-- DASHBOARD NAVBAR -->
-      <header class="dash-navbar">
-        <div class="container dash-nav-container">
+      <!-- HEADER / NAVIGATION (IDENTICAL TO INDEX.HTML) -->
+      <header class="navbar" id="navbar">
+        <div class="nav-container">
+          <!-- LEFT: BRAND LOGO -->
           <a href="/index.html" class="brand-logo">
-            <div class="logo-icon"><i data-lucide="wallet"></i></div>
+            <div class="logo-icon">
+              <i data-lucide="wallet"></i>
+            </div>
             <span class="logo-text">Verde<span class="logo-highlight">Ahorro</span></span>
           </a>
 
-          <div class="dash-user-bar">
+          <!-- CENTER: ACTIVE MODES TOGGLE BUTTONS IN NAV MENU -->
+          <nav class="nav-menu" style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="mode-toggle-btn active" id="dashSituationToggleBtn" title="Haz clic para activar o desactivar la Gestión de Colchón y Situación">
+              <i data-lucide="shield"></i> <span id="situationToggleText">Modo Colchón Activo</span>
+            </button>
+
+            <button class="couple-toggle-btn active" id="dashCoupleToggleBtn" title="Haz clic para activar o desactivar el Modo Pareja">
+              <i data-lucide="users"></i> <span id="coupleToggleText">Modo Pareja Activo</span>
+            </button>
+          </nav>
+
+          <!-- RIGHT: NAV ACTIONS WITH USER PROFILE & LOGOUT -->
+          <div class="nav-actions">
             <div class="user-pill">
               <div class="user-avatar" id="dashUserAvatar">EP</div>
               <div>
@@ -45,10 +48,6 @@
                 <div class="user-plan-tag" id="dashUserGoal">Meta: Fondo de Emergencia</div>
               </div>
             </div>
-
-            <button class="couple-toggle-btn active" id="dashCoupleToggleBtn" title="Haz clic para activar o desactivar el Modo Pareja">
-              <i data-lucide="users"></i> <span id="coupleToggleText">Modo Pareja Activo</span>
-            </button>
 
             <button class="btn btn-outline btn-sm" id="btnLogout">
               <i data-lucide="log-out"></i> Cerrar Sesión
@@ -59,6 +58,77 @@
 
       <!-- DASHBOARD MAIN CONTENT -->
       <main class="dash-main container">
+        <!-- FINANCIAL SURVIVAL & SITUATION MANAGER BANNER -->
+        <div class="dash-card survival-planner-banner" id="dashSurvivalBanner">
+          <div class="survival-header">
+            <div class="header-left">
+              <div class="status-badge yellow" id="dashSituationBadge">
+                <i data-lucide="zap"></i> <span id="situationBadgeText">Modo Adaptativo Activo</span>
+              </div>
+              <h2 class="survival-title">Gestión de Ahorro &amp; Situación Laboral</h2>
+              <p class="survival-subtitle">Selecciona tu situación actual para adaptar las reglas de presupuesto y calcular cuánto durará tu dinero.</p>
+            </div>
+
+            <!-- SITUATION SELECTOR BUTTONS & CONFIG -->
+            <div class="survival-controls-row">
+              <div class="situation-selector" id="situationSelector">
+                <button class="sit-btn active" data-situation="employed">
+                  <i data-lucide="briefcase"></i> Empleado / Fijo
+                </button>
+                <button class="sit-btn" data-situation="unemployed-subsidy">
+                  <i data-lucide="badge-percent"></i> Paro (Subsidio)
+                </button>
+                <button class="sit-btn" data-situation="no-income">
+                  <i data-lucide="alert-triangle"></i> Sin Ingresos
+                </button>
+              </div>
+
+              <button class="btn btn-outline btn-sm btn-config-sit" id="btnOpenSituationConfig">
+                <i data-lucide="sliders"></i> Editar Datos
+              </button>
+            </div>
+          </div>
+
+          <div class="survival-body-grid">
+            <!-- LEFT: DURATION CALCULATOR (RUNWAY) -->
+            <div class="runway-card-box">
+              <div class="runway-top">
+                <span class="runway-label">Duración Estimada de tu Dinero:</span>
+                <div class="runway-counter">
+                  <strong id="runwayMonthsVal">6.4</strong> <span class="unit">Meses de Autonomía</span>
+                </div>
+                <div class="runway-progress-bar">
+                  <div class="runway-fill" id="runwayFill" style="width: 53%;"></div>
+                </div>
+              </div>
+
+              <div class="runway-inputs-inline">
+                <div class="r-input-field">
+                  <label for="inputCapitalAvailable">Ahorro / Colchón Disponible (€)</label>
+                  <input type="number" id="inputCapitalAvailable" value="3200" step="100">
+                </div>
+                <div class="r-input-field">
+                  <label for="inputEssentialExpenses">Gastos Fijos Mínimos (€/mes)</label>
+                  <input type="number" id="inputEssentialExpenses" value="500" step="50">
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: ADAPTIVE ADVICE & TIPS -->
+            <div class="survival-tips-box">
+              <div class="tips-header">
+                <i data-lucide="lightbulb"></i>
+                <span id="tipsBoxTitle">Estrategia Recomendada: Regla 50/30/20</span>
+              </div>
+              <ul class="tips-list" id="survivalTipsList">
+                <li><i data-lucide="check-circle2"></i> Asigna el 50% a gastos fijos indispensables (vivienda, comida, luz).</li>
+                <li><i data-lucide="check-circle2"></i> Automatiza el 20% de ahorro directo el primer día del mes.</li>
+                <li><i data-lucide="check-circle2"></i> Mantén un 30% controlado para ocio y flexibilidad personal.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <!-- TOP SUMMARY CARDS -->
         <div class="dash-summary-grid">
           <!-- Card 1: Ingreso Mensual -->
@@ -128,6 +198,31 @@
           </div>
         </div>
 
+        <!-- CHARTS SECTION GRID -->
+        <div class="dash-charts-grid" id="dashChartsGrid">
+          <!-- Chart 1: Gastos por Categoría y Ahorro -->
+          <div class="dash-card chart-card">
+            <div class="card-title-bar">
+              <h3><i data-lucide="pie-chart"></i> Distribución de Gastos vs Ahorro</h3>
+              <span class="badge-mini">Gráfico en tiempo real</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="categoryExpensesChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Gastos Personales vs Gastos Compartidos (Pareja) -->
+          <div class="dash-card chart-card" id="dashCoupleChartCard">
+            <div class="card-title-bar">
+              <h3><i data-lucide="heart"></i> Gastos Personales vs Compartidos</h3>
+              <span class="badge-mini">Reparto 50/50</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="coupleExpensesChart"></canvas>
+            </div>
+          </div>
+        </div>
+
         <!-- TWO COLUMN DASHBOARD BODY -->
         <div class="dash-body-grid">
           <!-- LEFT: EXPENSE TRACKER & FORM -->
@@ -169,14 +264,15 @@
               </div>
 
               <div class="expense-options-row">
-                <label class="checkbox-label" id="dashExpenseSharedWrapper">
-                  <input type="checkbox" id="expenseIsShared" checked>
-                  <span>Gasto común en pareja (se divide automáticamente 50/50)</span>
-                </label>
+                <div class="expense-buttons-group">
+                  <button type="submit" id="btnAddPersonalExpense" class="btn btn-outline btn-add-expense" data-shared="false">
+                    <i data-lucide="plus-circle"></i> Añadir Gasto Personal
+                  </button>
 
-                <button type="submit" class="btn btn-primary btn-add-expense">
-                  <i data-lucide="plus-circle"></i> Añadir Gasto
-                </button>
+                  <button type="submit" id="btnAddCoupleExpense" class="btn btn-primary btn-add-expense btn-couple" data-shared="true">
+                    <i data-lucide="heart"></i> Añadir Gasto Pareja 💑
+                  </button>
+                </div>
               </div>
             </form>
 
@@ -221,18 +317,104 @@
             <!-- PRE-SAVING CHECKLIST CARD -->
             <div class="dash-card presaving-card">
               <div class="card-title-bar">
-                <h3><i data-lucide="lightbulb"></i> Reto del Preahorro</h3>
+                <h3><i data-lucide="target"></i> Reto del Preahorro (20%)</h3>
+                <span class="badge-mini" id="preSavingBadge">Objetivo: 440 €</span>
               </div>
-              <p>El primer día del mes separa tu 20% de ahorro antes de empezar a gastar.</p>
+              <p class="presaving-desc">Separa tu 20% de ahorro el día 1 del mes para asegurar tu futuro financiero antes de empezar a gastar.</p>
               
-              <div class="checklist-item">
-                <input type="checkbox" id="chkPreSaving" checked>
-                <label for="chkPreSaving">Ahorro de Julio completado (440€ guardados) 🎉</label>
+              <div class="presaving-progress-box">
+                <div class="presaving-stats-row">
+                  <span class="p-stat-label">Progreso del Mes</span>
+                  <strong class="p-stat-val" id="preSavingPctText">100% Guardado 🎉</strong>
+                </div>
+                <div class="presaving-bar-track">
+                  <div class="presaving-bar-fill" id="preSavingBarFill" style="width: 100%;"></div>
+                </div>
+                <div class="presaving-remaining-text" id="preSavingRemainingText">
+                  Ingresados <strong>440 €</strong> de 440 € | <strong>0 € restantes por ingresar</strong>
               </div>
             </div>
           </div>
         </div>
       </main>
+    </div>
+
+    <!-- MODAL CONFIRMACIÓN MODO COLCHÓN -->
+    <div class="auth-modal" id="modalSituationConfirm">
+      <div class="auth-modal-content confirm-modal-box">
+        <div class="modal-header-simple">
+          <div class="confirm-icon-box green"><i data-lucide="shield-check"></i></div>
+          <h3 id="modalSituationTitle">¿Deseas activar el Modo Colchón y Situación Laboral?</h3>
+        </div>
+        <p class="modal-desc-text" id="modalSituationDescText">
+          Al activarlo, se mostrará el panel de autonomía financiera, recomendaciones adaptativas según tu situación (empleado/paro) y la calculadora en tiempo real.
+        </p>
+        <div class="modal-actions-row">
+          <button class="btn btn-outline" id="btnCancelSituationModal">Cancelar</button>
+          <button class="btn btn-primary" id="btnConfirmSituationModal">Sí, Activar Modo Colchón</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL CONFIRMACIÓN MODO PAREJA -->
+    <div class="auth-modal" id="modalCoupleConfirm">
+      <div class="auth-modal-content confirm-modal-box">
+        <div class="modal-header-simple">
+          <div class="confirm-icon-box pink"><i data-lucide="heart"></i></div>
+          <h3 id="modalCoupleTitle">¿Deseas activar el Modo Pareja y Gastos Compartidos?</h3>
+        </div>
+        <p class="modal-desc-text" id="modalCoupleDescText">
+          Al activarlo, se mostrará tu código de invitación único, el simulador de reparto 50/50, la vinculación y los botones de gastos en pareja.
+        </p>
+        <div class="modal-actions-row">
+          <button class="btn btn-outline" id="btnCancelCoupleModal">Cancelar</button>
+          <button class="btn btn-primary btn-couple" id="btnConfirmCoupleModal">Sí, Activar Modo Pareja 💑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL CONFIGURACIÓN SITUACIÓN FINANCIERA -->
+    <div class="auth-modal" id="modalSituationForm">
+      <div class="auth-modal-content config-modal-box">
+        <div class="modal-header-simple">
+          <div class="confirm-icon-box yellow"><i data-lucide="sliders"></i></div>
+          <h3>Configurar tu Situación Financiera</h3>
+          <button class="btn-close-modal" id="btnCloseSituationFormModal">&times;</button>
+        </div>
+        <form id="formSituationConfig">
+          <div class="input-field mb-3" style="margin-bottom: 1rem;">
+            <label for="cfgSituationType">Situación Laboral Actual</label>
+            <div class="input-wrapper select-wrapper">
+              <i data-lucide="briefcase"></i>
+              <select id="cfgSituationType" class="custom-select">
+                <option value="employed">🟢 Empleado / Ingreso Fijo (Regla 50/30/20)</option>
+                <option value="unemployed-subsidy">🟡 En Paro con Subsidio (Austeridad 70/10/20)</option>
+                <option value="no-income">🔴 Sin Ingresos (Modo Supervivencia Extrema)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field mb-3" style="margin-bottom: 1rem;">
+            <label for="cfgCapital">Ahorro / Colchón Disponible (€)</label>
+            <div class="input-wrapper">
+              <i data-lucide="wallet"></i>
+              <input type="number" id="cfgCapital" placeholder="3200" step="50" required>
+            </div>
+          </div>
+
+          <div class="input-field mb-3" style="margin-bottom: 1rem;">
+            <label for="cfgEssential">Gastos Fijos Mínimos (€/mes)</label>
+            <div class="input-wrapper">
+              <i data-lucide="coins"></i>
+              <input type="number" id="cfgEssential" placeholder="500" step="50" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" style="width: 100%; margin-top: 1rem;">
+            Guardar y Aplicar Cambios
+          </button>
+        </form>
+      </div>
     </div>
 
     <script type="module" src="/src/dashboard.js"></script>

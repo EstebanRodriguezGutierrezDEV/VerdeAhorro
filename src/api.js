@@ -150,19 +150,20 @@ export async function fetchExpensesFromSupabase(userId) {
  */
 export async function saveExpenseToSupabase(userId, expense) {
   // Sanitizar datos del gasto antes de enviar a BD
-  expense.title = sanitizeInput(expense.title || '');
-  expense.amount = sanitizeNumber(expense.amount, { min: 0.01, max: 99999 });
-  expense.category = sanitizeInput(expense.category || 'fixed');
+  const safeTitle = sanitizeInput(expense.title || '');
+  const safeAmount = sanitizeNumber(expense.amount, { min: 0.01, max: 99999 });
+  const safeCategory = sanitizeInput(expense.category || 'fixed');
+
   try {
     const { data, error } = await supabase
       .from('expenses')
       .insert([
         {
           user_id: userId,
-          title: expense.title,
-          amount: expense.amount,
-          category: expense.category,
-          is_shared: expense.isShared,
+          title: safeTitle,
+          amount: safeAmount,
+          notes: safeCategory,
+          is_shared: !!expense.isShared,
           expense_date: expense.date || new Date().toISOString().split('T')[0]
         }
       ])
@@ -202,5 +203,21 @@ export async function logoutUser() {
     await supabase.auth.signOut();
   } catch (e) {
     console.log('Sesión cerrada');
+  }
+}
+
+/**
+ * Guarda el estado activo de los modos (Modo Colchón / Modo Pareja) en Supabase
+ */
+export async function saveUserModesToSupabase(modes) {
+  try {
+    const { data, error } = await supabase.auth.updateUser({
+      data: {
+        active_modes: modes
+      }
+    });
+    return { success: !error };
+  } catch (e) {
+    return { success: false };
   }
 }
