@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VerdeAhorro | Tu Gestor de Gastos y Planificador de Ahorro Personal</title>
+    <meta name="description" content="Organiza tus gastos mensuales, calcula tus límites de presupuesto y aprende a ahorrar para alcanzar tus objetivos sin vincular cuentas ni tarjetas bancarias." />
+    
+    <!-- Cabeceras de Seguridad -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: blob:;
+      connect-src 'self' https://*.supabase.co;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self';
+    " />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>    <div id="app">
+      <!-- LANDING PAGE VIEW -->
+      <div id="landingView">
+        <!-- HEADER / NAVIGATION -->
+        <header class="navbar" id="navbar">
+          <div class="nav-container">
+            <a href="#" class="brand-logo">
+              <div class="logo-icon">
+                <i data-lucide="wallet"></i>
+              </div>
+              <span class="logo-text">Verde<span class="logo-highlight">Ahorro</span></span>
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+              <a href="#features" class="nav-link">Cómo Funciona</a>
+              <a href="#gastos" class="nav-link">Control de Gastos</a>
+              <a href="#pareja" class="nav-link">En Pareja 💑</a>
+              <a href="#calculadora" class="nav-link">Plan de Ahorro</a>
+              <a href="#privacidad" class="nav-link">Privacidad</a>
+              <a href="#faq" class="nav-link">Preguntas</a>
+            </nav>
+
+            <div class="nav-actions">
+              <button class="btn btn-outline btn-sm" id="btnOpenLogin">
+                <i data-lucide="log-in"></i> Iniciar Sesión
+              </button>
+              <button class="btn btn-primary btn-sm" id="btnOpenRegister">
+                Empezar Gratis
+              </button>
+              <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir Menú">
+                <i data-lucide="menu"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- HERO SECTION -->
+        <section class="hero-section">
+          <div class="hero-bg-glow"></div>
+          <div class="hero-container">
+            <div class="hero-content">
+              <div class="badge-pill">
+                <i data-lucide="sparkles"></i> 100% Gratuito • Sin tarjetas ni cuentas bancarias
+              </div>
+              <h1 class="hero-title">
+                Gestiona tus <span class="text-gradient">gastos</span> y alcanza tu <span class="text-gradient">propósito de ahorro</span>
+              </h1>
+              <p class="hero-subtitle">
+                No guardamos tu dinero ni emitimos tarjetas. VerdeAhorro es tu planificador financiero personal: indicas tus ingresos, organizas tus gastos por categorías y sigues una guía clara para lograr la meta que te propongas.
+              </p>
+
+              <div class="hero-cta-group">
+                <button class="btn btn-primary btn-lg" id="heroBtnRegister">
+                  Crear mi Plan de Ahorro <i data-lucide="arrow-right"></i>
+                </button>
+                <a href="#calculadora" class="btn btn-secondary btn-lg">
+                  <i data-lucide="calculator"></i> Probar Calculadora
+                </a>
+              </div>
+
+              <div class="hero-metrics">
+                <div class="metric-item">
+                  <span class="metric-number">0 €</span>
+                  <span class="metric-label">Sin vinculación bancaria</span>
+                </div>
+                <div class="metric-divider"></div>
+                <div class="metric-item">
+                  <span class="metric-number">100%</span>
+                  <span class="metric-label">Control total de tu presupuesto</span>
+                </div>
+                <div class="metric-divider"></div>
+                <div class="metric-item">
+                  <span class="metric-number">+350€</span>
+                  <span class="metric-label">Ahorro medio mensual estimado</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-visual">
+              <div class="bank-card-glass">
+                <div class="card-header-bar">
+                  <div class="user-info">
+                    <div class="avatar">EB</div>
+                    <div>
+                      <div class="user-name">Plan de Esteban 👋</div>
+                      <div class="user-status">Meta: Fondo de Emergencia</div>
+                    </div>
+                  </div>
+                  <div class="card-badge"><i data-lucide="target"></i> En Progreso</div>
+                </div>
+
+                <div class="balance-display">
+                  <span class="balance-label">Ingreso Mensual Registrado</span>
+                  <div class="balance-amount">2.200 <span class="currency">€/mes</span></div>
+                  <div class="balance-change positive">
+                    <i data-lucide="trending-up"></i> Ahorro sugerido este mes: 440€ (20%)
+                  </div>
+                </div>
+
+                <!-- Interactive Quick Expense Widget -->
+                <div class="expense-breakdown-card">
+                  <div class="widget-title">
+                    <span>Gastos Planificados de Julio</span>
+                    <span class="total-spent">1.320€ / 1.760€ límite</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 75%;"></div>
+                  </div>
+
+                  <div class="expense-chips">
+                    <div class="chip">
+                      <span class="chip-dot" style="background-color: #10B981;"></span>
+                      <span>Fijos/Hogar</span>
+                      <strong>900€</strong>
+                    </div>
+                    <div class="chip">
+                      <span class="chip-dot" style="background-color: #3B82F6;"></span>
+                      <span>Alimentación</span>
+                      <strong>300€</strong>
+                    </div>
+                    <div class="chip">
+                      <span class="chip-dot" style="background-color: #F59E0B;"></span>
+                      <span>Ocio y Caprichos</span>
+                      <strong>350€</strong>
+                    </div>
+                    <div class="chip">
+                      <span class="chip-dot" style="background-color: #059669;"></span>
+                      <span>Meta Ahorro</span>
+                      <strong>440€</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Floating Savings Goal Pill -->
+                <div class="floating-pill pill-top-right">
+                  <div class="pill-icon"><i data-lucide="piggy-bank"></i></div>
+                  <div>
+                    <div class="pill-title">Tu Objetivo</div>
+                    <div class="pill-desc">3.000€ para Emergencias</div>
+                  </div>
+                </div>
+
+                <div class="floating-pill pill-bottom-left">
+                  <div class="pill-icon green"><i data-lucide="lightbulb"></i></div>
+                  <div>
+                    <div class="pill-title">Consejo del Día</div>
+                    <div class="pill-desc">Aplica la regla del Preahorro el día 1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FEATURES & EXPENSE TRACKING SECTION -->
+        <section class="section" id="gastos">
+          <div class="container">
+            <div class="section-header center">
+              <div class="badge-pill">
+                <i data-lucide="pie-chart"></i> Gestión de Gastos Simplificada
+              </div>
+              <h2 class="section-title">
+                Aprende exactamente en qué gastas y <span class="text-gradient">dónde puedes recortar</span>
+              </h2>
+              <p class="section-subtitle">
+                Sin conectar tu banco. Tú tienes la libertad de anotar tus ingresos y gastos de forma rápida para visualizar tus finanzas sin rodeos.
+              </p>
+            </div>
+
+            <div class="features-grid">
+              <div class="feature-card highlighted">
+                <div class="feature-icon"><i data-lucide="layers"></i></div>
+                <h3>Planificador de Presupuesto Mensual</h3>
+                <p>Clasifica tus gastos en Fijos, Flexibles y Ahorro. Ajusta tus números y descubre al instante cuánto margen tienes para tus metas.</p>
+                
+                <!-- Interactive Category Simulator -->
+                <div class="interactive-simulator">
+                  <h4>Prueba el simulador de distribución de ingresos:</h4>
+                  <div class="sim-controls">
+                    <div class="sim-row">
+                      <label>Tus Ingresos Mensuales: <strong id="simIncomeVal">2.200€</strong></label>
+                      <input type="range" id="simIncomeInput" min="800" max="5000" step="100" value="2200">
+                    </div>
+                  </div>
+                  <div class="sim-results">
+                    <div class="sim-box green-box">
+                      <span>Ahorro Destinado (20%)</span>
+                      <strong id="simSavingsVal">440 € / mes</strong>
+                    </div>
+                    <div class="sim-box blue-box">
+                      <span>Gastos Imprescindibles (50%)</span>
+                      <strong id="simFixedVal">1.100 € / mes</strong>
+                    </div>
+                    <div class="sim-box orange-box">
+                      <span>Ocio y Estilo de Vida (30%)</span>
+                      <strong id="simFlexVal">660 € / mes</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="bell-ring"></i></div>
+                <h3>Límites y Alertas de Gasto</h3>
+                <p>Establece topes máximos por categoría (ej. 200€ en ocio) y mantén tus gastos bajo control antes de que se termine el mes.</p>
+              </div>
+
+              <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="target"></i></div>
+                <h3>Seguimiento de tu Propósito</h3>
+                <p>Ya sea comprar un coche, viajar o tener un colchón de seguridad, sigue tu avance barra a barra hasta completar el 100%.</p>
+              </div>
+
+              <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="lightbulb"></i></div>
+                <h3>Educación y Guía Paso a Paso</h3>
+                <p>Te enseñamos estrategias como el Preahorro y el reto de las 52 semanas para que crear el hábito de ahorrar sea fácil y gratificante.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SHARED COUPLE EXPENSES SECTION -->
+        <section class="section shared-couple-section bg-emerald-subtle" id="pareja">
+          <div class="container">
+            <div class="shared-card">
+              <div class="shared-content">
+                <div class="badge-pill">
+                  <i data-lucide="users"></i> Novedad • Modo Gastos en Pareja
+                </div>
+                <h2 class="section-title">
+                  Gestiona y divide los gastos de casa <span class="text-gradient">con tu pareja</span>
+                </h2>
+                <p class="section-subtitle">
+                  ¿Vives en pareja o compartes gastos de hogar? Activa el **Modo Compartido** para repartir el alquiler, las facturas y el supermercado automáticamente sin discusiones.
+                </p>
+
+                <div class="shared-features-list">
+                  <div class="shared-item">
+                    <div class="item-icon"><i data-lucide="link"></i></div>
+                    <div>
+                      <strong>Vinculación por Código Privado:</strong>
+                      <p>Invita a tu pareja usando un código único de 6 dígitos. Ambas cuentas se sincronizan al instante.</p>
+                    </div>
+                  </div>
+
+                  <div class="shared-item">
+                    <div class="item-icon"><i data-lucide="sliders"></i></div>
+                    <div>
+                      <strong>Reparto 50/50 o Proporcional al Sueldo:</strong>
+                      <p>Elige si queréis dividir los gastos comunes a partes iguales o según la capacidad de ingresos de cada uno.</p>
+                    </div>
+                  </div>
+
+                  <div class="shared-item">
+                    <div class="item-icon"><i data-lucide="shield-check"></i></div>
+                    <div>
+                      <strong>Ahorro e Historial Personal Privados:</strong>
+                      <p>Solo se comparten los gastos comunes del hogar. Tus gastos personales y tu meta de ahorro individual siguen siendo 100% privados.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interactive Couple Split Simulator Widget -->
+              <div class="shared-widget-card">
+                <div class="widget-header">
+                  <div class="couple-avatars">
+                    <div class="av avatar-user">Tú</div>
+                    <div class="heart-icon"><i data-lucide="heart"></i></div>
+                    <div class="av avatar-partner">Pareja</div>
+                  </div>
+                  <div class="widget-badge">Modo Pareja Activo</div>
+                </div>
+
+                <div class="split-controls">
+                  <div class="toggle-group">
+                    <span class="toggle-label">Modo de Reparto:</span>
+                    <div class="segmented-control">
+                      <button class="segment-btn active" id="btnSplit5050">50 / 50</button>
+                      <button class="segment-btn" id="btnSplitProp">Proporcional Sueldo</button>
+                    </div>
+                  </div>
+
+                  <div class="expense-common-box">
+                    <span>Gastos Comunes del Mes (Alquiler + Facturas + Comida)</span>
+                    <strong id="commonExpensesTotal">1.200 €</strong>
+                  </div>
+
+                  <div class="split-result-boxes">
+                    <div class="split-box user-box">
+                      <span class="split-who">Tu parte a aportar:</span>
+                      <strong id="userSplitAmount">600 €</strong>
+                      <span class="split-pct" id="userSplitPct">(50% del total)</span>
+                    </div>
+
+                    <div class="split-box partner-box">
+                      <span class="split-who">Parte de tu pareja:</span>
+                      <strong id="partnerSplitAmount">600 €</strong>
+                      <span class="split-pct" id="partnerSplitPct">(50% del total)</span>
+                    </div>
+                  </div>
+
+                  <div class="split-note">
+                    <i data-lucide="sparkles"></i> <span id="splitNoteText">Dividido equitativamente 50/50. Ideal para cuentas de hogar compartidas.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SAVINGS METHODOLOGY & CALCULATOR -->
+        <section class="section bg-light" id="calculadora">
+          <div class="container">
+            <div class="section-header">
+              <div class="badge-pill">
+                <i data-lucide="calculator"></i> Calculadora de Objetivos
+              </div>
+              <h2 class="section-title">
+                Descubre en cuánto tiempo alcanzarás tu <span class="text-gradient">meta de ahorro</span>
+              </h2>
+              <p class="section-subtitle">
+                Calcula el ritmo necesario para lograr tu propósito ajustando la cantidad mensual que deseas destinar.
+              </p>
+            </div>
+
+            <div class="calculator-card">
+              <div class="calc-inputs">
+                <h3>Planifica tu Meta Financiera</h3>
+                <p class="calc-desc">Ajusta la cantidad mensual y los años de seguimiento para ver la proyección total de tu capital ahorrado.</p>
+                
+                <div class="form-group">
+                  <div class="label-row">
+                    <label for="monthlySavings">Ahorro mensual apartado (€):</label>
+                    <span class="range-val" id="monthlySavingsVal">250 €</span>
+                  </div>
+                  <input type="range" id="monthlySavings" min="50" max="1500" step="25" value="250">
+                </div>
+
+                <div class="form-group">
+                  <div class="label-row">
+                    <label for="yearsRange">Tiempo de seguimiento (Años):</label>
+                    <span class="range-val" id="yearsVal">5 Años</span>
+                  </div>
+                  <input type="range" id="yearsRange" min="1" max="20" step="1" value="5">
+                </div>
+
+                <div class="rule-box">
+                  <div class="rule-icon"><i data-lucide="lightbulb"></i></div>
+                  <div>
+                    <strong>La clave: El Método del Preahorro</strong>
+                    <p>En lugar de ahorrar lo que te sobra a fin de mes, separa tu cantidad fijada el mismo día que cobras la nómina.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="calc-output">
+                <div class="output-header">
+                  <span>En <strong id="outYears">5</strong> años habrás acumulado:</span>
+                </div>
+                <div class="big-money" id="projectedTotal">15.000 €</div>
+                
+                <div class="output-breakdown">
+                  <div class="out-item">
+                    <span class="dot capital"></span>
+                    <span>Ahorro Total Acumulado:</span>
+                    <strong id="outCapital">15.000 €</strong>
+                  </div>
+                  <div class="out-item">
+                    <span class="dot yield"></span>
+                    <span>Proyección con Preahorro Constante:</span>
+                    <strong id="outYield" class="text-green">Meta Alcanzada 🎯</strong>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="calcCtaBtn">
+                  Comenzar mi Plan Ahora <i data-lucide="arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PRIVACY & NO BANK SECTION -->
+        <section class="section" id="privacidad">
+          <div class="container">
+            <div class="security-banner">
+              <div class="security-content">
+                <div class="badge-pill light">
+                  <i data-lucide="shield"></i> 100% Privado y Sin Riesgos
+                </div>
+                <h2>Sin conectar cuentas bancarias ni tarjetas</h2>
+                <p>Creemos en la privacidad absoluta. VerdeAhorro no custodia tu dinero ni requiere contraseñas de tu banco. Tú mantienes el control total de tu información.</p>
+
+                <div class="security-checks">
+                  <div class="check-item">
+                    <i data-lucide="check-circle-2"></i>
+                    <span>No solicitamos número de cuenta (IBAN) ni números de tarjeta</span>
+                  </div>
+                  <div class="check-item">
+                    <i data-lucide="check-circle-2"></i>
+                    <span>Solo tú ves tus registros e historial de presupuesto</span>
+                  </div>
+                  <div class="check-item">
+                    <i data-lucide="check-circle-2"></i>
+                    <span>Configuración ultrarrápida: Solo indicas tu ingreso y tu objetivo</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="security-badge-card">
+                <div class="shield-graphic">
+                  <i data-lucide="lock"></i>
+                </div>
+                <div class="shield-status">Tus Datos Protegidos</div>
+                <p>Tus finanzas son privadas. Herramienta diseñada exclusivamente para organizar y planificar tus metas.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section class="section bg-light" id="faq">
+          <div class="container small">
+            <div class="section-header center">
+              <h2 class="section-title">Preguntas Frecuentes</h2>
+              <p class="section-subtitle">Aclara cualquier duda sobre cómo funciona VerdeAhorro.</p>
+            </div>
+
+            <div class="accordion">
+              <div class="accordion-item">
+                <button class="accordion-header">
+                  <span>¿VerdeAhorro guarda o gestiona mi dinero directamente?</span>
+                  <i data-lucide="chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                  <p>No. VerdeAhorro no es un banco ni una entidad financiera. Es una aplicación de gestión y planificación personal. Tu dinero permanece en tu banco de confianza; nosotros te ayudamos a organizarlo y saber cuánto puedes gastar y ahorrar.</p>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <button class="accordion-header">
+                  <span>¿Tengo que conectar mi tarjeta o cuenta bancaria?</span>
+                  <i data-lucide="chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                  <p>No. No te pediremos nunca datos bancarios, contraseñas de acceso al banco ni tarjetas de crédito. Solo registras tus datos de presupuesto (ingresos mensuales y metas) de forma manual o asistida.</p>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <button class="accordion-header">
+                  <span>¿Cómo me enseña VerdeAhorro a ahorrar?</span>
+                  <i data-lucide="chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                  <p>Te guiamos mediante metodologías como la regla 50/30/20 y el Preahorro. Te ayudamos a definir techos de gasto por categoría y a medir tu avance mes a mes hacia tu propósito.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CALL TO ACTION BANNER -->
+        <section class="cta-section">
+          <div class="container">
+            <div class="cta-box">
+              <h2>Empieza hoy a organizar tu dinero y cumplir tus metas</h2>
+              <p>Define tu propósito de ahorro y toma el control de tus gastos en menos de 1 minuto.</p>
+              <button class="btn btn-primary btn-lg" id="footerCtaRegister">
+                Crear mi Plan Personalizado Gratis
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+          <div class="container">
+            <div class="footer-top">
+              <div class="footer-brand">
+                <a href="#" class="brand-logo">
+                  <div class="logo-icon"><i data-lucide="wallet"></i></div>
+                  <span class="logo-text">Verde<span class="logo-highlight">Ahorro</span></span>
+                </a>
+                <p>Tu planificador personal de gastos y asistente de ahorro. Diseña tu presupuesto y alcanza tus metas.</p>
+              </div>
+
+              <div class="footer-links-group">
+                <div class="footer-col">
+                  <h4>Herramientas</h4>
+                  <a href="#gastos">Control de Gastos</a>
+                  <a href="#calculadora">Calculadora de Objetivos</a>
+                  <a href="#privacidad">Privacidad</a>
+                </div>
+                <div class="footer-col">
+                  <h4>Métodos</h4>
+                  <a href="#calculadora">Regla 50/30/20</a>
+                  <a href="#calculadora">Método Preahorro</a>
+                  <a href="#faq">Preguntas Frecuentes</a>
+                </div>
+                <div class="footer-col">
+                  <h4>Legal</h4>
+                  <a href="#">Términos de Uso</a>
+                  <a href="#">Política de Privacidad</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="footer-bottom">
+              <p>&copy; 2026 VerdeAhorro. Todos los derechos reservados. Aplicación de planificación de gastos personales.</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+
+    <!-- AUTH MODAL (LOGIN & REGISTER) -->
+    <div class="modal-backdrop" id="authModal">
+      <div class="modal-card">
+        <button class="modal-close" id="btnCloseAuthModal" aria-label="Cerrar modal">&times;</button>
+        
+        <div class="modal-header-brand">
+          <div class="modal-brand">
+            <div class="logo-icon small"><i data-lucide="wallet"></i></div>
+            <span class="logo-text">Verde<span class="logo-highlight">Ahorro</span></span>
+          </div>
+          <div class="modal-privacy-pill">
+            <i data-lucide="shield-check"></i> 100% Privado • Sin vincular banco
+          </div>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="tab-btn active" id="tabLoginBtn">
+            <i data-lucide="log-in"></i> Iniciar Sesión
+          </button>
+          <button class="tab-btn" id="tabRegisterBtn">
+            <i data-lucide="sparkles"></i> Crear mi Plan
+          </button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form class="auth-form" id="loginForm">
+          <div class="form-title-group">
+            <h3 class="form-title">Bienvenido a tu Plan 📊</h3>
+            <p class="form-subtitle">Ingresa tus datos para gestionar tus presupuestos y revisar tu progreso.</p>
+          </div>
+
+          <div class="input-field">
+            <label for="loginEmail">Correo Electrónico</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail"></i>
+              <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="loginPassword">Contraseña</label>
+              <a href="#" class="forgot-pass" id="forgotPassLink">¿Olvidaste tu contraseña?</a>
+            </div>
+            <div class="input-wrapper">
+              <i data-lucide="lock"></i>
+              <input type="password" id="loginPassword" placeholder="••••••••" required>
+              <button type="button" class="toggle-pass" aria-label="Ver contraseña"><i data-lucide="eye"></i></button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            Entrar a mi Perfil <i data-lucide="arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form class="auth-form hidden" id="registerForm">
+          <div class="form-title-group">
+            <h3 class="form-title">Crea tu Plan de Ahorro 🚀</h3>
+            <p class="form-subtitle">Sin tarjetas ni datos bancarios. Solo tu meta y tu presupuesto.</p>
+          </div>
+
+          <div class="input-field">
+            <label for="regName">Nombre Completo</label>
+            <div class="input-wrapper">
+              <i data-lucide="user"></i>
+              <input type="text" id="regName" placeholder="Esteban Pérez" required>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label for="regEmail">Correo Electrónico</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail"></i>
+              <input type="email" id="regEmail" placeholder="tu@email.com" required>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="regIncome">Ingreso Mensual Estimado (€/mes)</label>
+              <span class="field-hint" id="regIncomePreview">Meta 20%: 400€/mes</span>
+            </div>
+            <div class="input-wrapper">
+              <i data-lucide="coins"></i>
+              <input type="number" id="regIncome" placeholder="Ej: 2000" min="200" max="50000" step="50" value="2000" required>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label for="regGoal">¿Cuál es tu propósito de ahorro principal?</label>
+            <div class="input-wrapper select-wrapper">
+              <i data-lucide="target"></i>
+              <select id="regGoal" class="custom-select" required>
+                <option value="" disabled>Selecciona tu objetivo</option>
+                <option value="Fondo de Emergencia" selected>Fondo de Emergencia (Recomendado)</option>
+                <option value="Comprar Coche o Casa">Comprar Coche / Casa</option>
+                <option value="Viajes y Vacaciones">Viajes y Vacaciones</option>
+                <option value="Salir de Deudas">Salir de Deudas / Créditos</option>
+                <option value="Ahorro Libre">Ahorro Libre / Inversión</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label for="regPassword">Contraseña</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock"></i>
+              <input type="password" id="regPassword" placeholder="Mínimo 8 caracteres" minlength="8" required>
+              <button type="button" class="toggle-pass" aria-label="Ver contraseña"><i data-lucide="eye"></i></button>
+            </div>
+          </div>
+
+          <div class="input-checkbox">
+            <input type="checkbox" id="regTerms" required checked>
+            <label for="regTerms">Acepto las <a href="#">Condiciones de Uso</a> y la <a href="#">Política de Privacidad</a> de VerdeAhorro.</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            Guardar mi Plan e Iniciar <i data-lucide="arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- Toast notification inside modal -->
+        <div class="auth-toast hidden" id="authToast"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

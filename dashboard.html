@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Panel | VerdeAhorro</title>
+
+    <!-- Cabeceras de Seguridad -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: blob:;
+      connect-src 'self' https://*.supabase.co;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self';
+    " />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="dashboard-page">
+    <div id="app">
+      <!-- DASHBOARD NAVBAR -->
+      <header class="dash-navbar">
+        <div class="container dash-nav-container">
+          <a href="/index.html" class="brand-logo">
+            <div class="logo-icon"><i data-lucide="wallet"></i></div>
+            <span class="logo-text">Verde<span class="logo-highlight">Ahorro</span></span>
+          </a>
+
+          <div class="dash-user-bar">
+            <div class="user-pill">
+              <div class="user-avatar" id="dashUserAvatar">EP</div>
+              <div>
+                <div class="user-name" id="dashUserName">Esteban Pérez</div>
+                <div class="user-plan-tag" id="dashUserGoal">Meta: Fondo de Emergencia</div>
+              </div>
+            </div>
+
+            <button class="couple-toggle-btn active" id="dashCoupleToggleBtn" title="Haz clic para activar o desactivar el Modo Pareja">
+              <i data-lucide="users"></i> <span id="coupleToggleText">Modo Pareja Activo</span>
+            </button>
+
+            <button class="btn btn-outline btn-sm" id="btnLogout">
+              <i data-lucide="log-out"></i> Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- DASHBOARD MAIN CONTENT -->
+      <main class="dash-main container">
+        <!-- TOP SUMMARY CARDS -->
+        <div class="dash-summary-grid">
+          <!-- Card 1: Ingreso Mensual -->
+          <div class="dash-card summary-card green">
+            <div class="dash-card-header">
+              <span>Ingreso Mensual Registrado</span>
+              <i data-lucide="coins"></i>
+            </div>
+            <div class="dash-amount" id="dashIncome">2.200 €</div>
+            <div class="dash-subtext">Regla 50/30/20 aplicada</div>
+          </div>
+
+          <!-- Card 2: Presupuesto & Gastos -->
+          <div class="dash-card summary-card blue">
+            <div class="dash-card-header">
+              <span>Gastos Registrados del Mes</span>
+              <i data-lucide="pie-chart"></i>
+            </div>
+            <div class="dash-amount" id="dashSpentTotal">0 €</div>
+            <div class="dash-subtext" id="dashSpentLimit">Disponible para gastar: 0 €</div>
+          </div>
+
+          <!-- Card 3: Meta de Ahorro -->
+          <div class="dash-card summary-card purple">
+            <div class="dash-card-header">
+              <span>Avance de tu Meta</span>
+              <i data-lucide="target"></i>
+            </div>
+            <div class="dash-amount" id="dashGoalAmount">0 € / 3.000 €</div>
+            <div class="dash-progress-bar">
+              <div class="dash-progress-fill" id="dashGoalProgress" style="width: 0%;"></div>
+            </div>
+            <div class="dash-subtext" id="dashGoalPct">0% Completado 🎯</div>
+          </div>
+
+          <!-- Card 4: Pareja / Compartido -->
+          <div class="dash-card summary-card orange" id="dashCoupleSummaryCard">
+            <div class="dash-card-header">
+              <span>Gastos Compartidos (Pareja)</span>
+              <i data-lucide="heart"></i>
+            </div>
+            <div class="dash-amount" id="dashCoupleShare">0 € (Tu 50%)</div>
+            <div class="dash-subtext">Reparto 50/50 activado</div>
+          </div>
+        </div>
+
+        <!-- 50/30/20 BUDGET DISTRIBUTION BAR CARD -->
+        <div class="dash-card budget-distribution-card">
+          <div class="distribution-header">
+            <div>
+              <strong class="dist-title">Distribución Recomendada de tu Ingreso (Regla 50 / 30 / 20)</strong>
+              <p class="dist-subtitle" id="distSubtitle">Calculado en base a tus 2.200 €/mes</p>
+            </div>
+            <span class="badge-mini"><i data-lucide="sparkles"></i> Salud Financiera</span>
+          </div>
+
+          <div class="stacked-bar-container">
+            <div class="stacked-bar-segment seg-fixed" id="segFixed" style="width: 50%;" title="50% Gastos Fijos">
+              <span id="labelFixed">50% Fijos (1.100€)</span>
+            </div>
+            <div class="stacked-bar-segment seg-flexible" id="segFlex" style="width: 30%;" title="30% Ocio">
+              <span id="labelFlex">30% Ocio (660€)</span>
+            </div>
+            <div class="stacked-bar-segment seg-savings" id="segSavings" style="width: 20%;" title="20% Ahorro Meta">
+              <span id="labelSavings">20% Ahorro (440€)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TWO COLUMN DASHBOARD BODY -->
+        <div class="dash-body-grid">
+          <!-- LEFT: EXPENSE TRACKER & FORM -->
+          <div class="dash-card main-expense-card">
+            <div class="card-title-bar">
+              <h3><i data-lucide="plus-circle"></i> Registrar Nuevo Gasto</h3>
+              <span class="badge-mini">Actualización instantánea</span>
+            </div>
+
+            <form id="addExpenseForm" class="add-expense-form">
+              <div class="expense-inputs-row">
+                <div class="input-field flex-2">
+                  <label for="expenseTitle">Concepto del Gasto</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="tag"></i>
+                    <input type="text" id="expenseTitle" placeholder="Ej: Compra semanal Mercadona" required>
+                  </div>
+                </div>
+
+                <div class="input-field flex-1">
+                  <label for="expenseAmount">Importe (€)</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="coins"></i>
+                    <input type="number" id="expenseAmount" placeholder="45.50" step="0.5" required>
+                  </div>
+                </div>
+
+                <div class="input-field flex-1">
+                  <label for="expenseCategory">Categoría</label>
+                  <div class="input-wrapper select-wrapper">
+                    <i data-lucide="layers"></i>
+                    <select id="expenseCategory" class="custom-select" required>
+                      <option value="fixed" selected>🟢 Fijo / Imprescindible (50%)</option>
+                      <option value="flexible">🔵 Ocio / Flexible (30%)</option>
+                      <option value="savings">🟣 Ahorro Directo (20%)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="expense-options-row">
+                <label class="checkbox-label" id="dashExpenseSharedWrapper">
+                  <input type="checkbox" id="expenseIsShared" checked>
+                  <span>Gasto común en pareja (se divide automáticamente 50/50)</span>
+                </label>
+
+                <button type="submit" class="btn btn-primary btn-add-expense">
+                  <i data-lucide="plus-circle"></i> Añadir Gasto
+                </button>
+              </div>
+            </form>
+
+            <!-- EXPENSE LIST TABLE -->
+            <div class="expense-list-container">
+              <h4>Historial de Gastos Anotados</h4>
+              <div class="expense-list" id="expenseList">
+                <!-- Expense items rendered by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: COUPLE CONNECT & SAVINGS GUIDE -->
+          <div class="dash-sidebar">
+            <!-- COUPLE CONNECTION BOX -->
+            <div class="dash-card couple-connect-card" id="dashCoupleCard">
+              <div class="couple-card-title">
+                <i data-lucide="users"></i>
+                <span>Modo Gastos en Pareja</span>
+              </div>
+              <p>Conecta tu cuenta con tu pareja para compartir los gastos de casa y ver el reparto en tiempo real.</p>
+              
+              <div class="invite-code-box">
+                <span class="code-label">Tu código de invitación:</span>
+                <div class="code-display">
+                  <strong id="myInviteCode">VA-8492</strong>
+                  <button class="btn btn-secondary btn-sm" id="btnCopyCode">
+                    <i data-lucide="copy"></i> Copiar
+                  </button>
+                </div>
+              </div>
+
+              <div class="partner-link-form">
+                <label for="partnerCodeInput">Vincular con código de tu pareja:</label>
+                <div class="input-inline">
+                  <input type="text" id="partnerCodeInput" placeholder="Ej: VA-1234">
+                  <button class="btn btn-primary btn-sm" id="btnLinkPartner">Vincular</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PRE-SAVING CHECKLIST CARD -->
+            <div class="dash-card presaving-card">
+              <div class="card-title-bar">
+                <h3><i data-lucide="lightbulb"></i> Reto del Preahorro</h3>
+              </div>
+              <p>El primer día del mes separa tu 20% de ahorro antes de empezar a gastar.</p>
+              
+              <div class="checklist-item">
+                <input type="checkbox" id="chkPreSaving" checked>
+                <label for="chkPreSaving">Ahorro de Julio completado (440€ guardados) 🎉</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="/src/dashboard.js"></script>
+  </body>
+</html>
