@@ -797,7 +797,7 @@ body.dashboard-page {
 /* CHARTS GRID */
 .dash-charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.75rem;
   margin-bottom: 2.25rem;
   transition: all 0.3s ease;
@@ -1012,7 +1012,7 @@ body.dashboard-page {
 /* CHARTS GRID */
 .dash-charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1.75rem;
   margin-bottom: 2.25rem;
 }
@@ -1391,6 +1391,126 @@ body.dashboard-page {
   border: 1.5px solid var(--border-light);
   border-radius: var(--radius-md);
   font-size: 0.9rem;
+}
+
+/* PARTNER LINKED STATUS */
+.partner-linked-status {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%);
+  border: 1.5px solid #F9A8D4;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+.partner-linked-status.hidden {
+  display: none;
+}
+
+.partner-linked-info {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.partner-linked-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #EC4899, #DB2777);
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.partner-linked-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.partner-linked-label {
+  font-size: 0.7rem;
+  color: #9D174D;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.partner-linked-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #831843;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.partner-linked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #059669;
+  background: #D1FAE5;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.partner-linked-badge i,
+.partner-linked-badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.btn-outline-danger {
+  background: transparent;
+  border: 1.5px solid #FDA4AF;
+  color: #E11D48;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.btn-outline-danger:hover {
+  background: #FFF1F2;
+  border-color: #FB7185;
+}
+
+.btn-outline-danger i,
+.btn-outline-danger svg {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .presaving-card {

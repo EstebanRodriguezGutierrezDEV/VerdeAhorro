@@ -293,24 +293,39 @@
                 <i data-lucide="users"></i>
                 <span>Modo Gastos en Pareja</span>
               </div>
-              <p>Conecta tu cuenta con tu pareja para compartir los gastos de casa y ver el reparto en tiempo real.</p>
+              <p id="coupleCardDesc">Conecta tu cuenta con tu pareja para compartir los gastos de casa y ver el reparto en tiempo real.</p>
               
-              <div class="invite-code-box">
+              <div class="invite-code-box" id="inviteCodeBox">
                 <span class="code-label">Tu código de invitación:</span>
                 <div class="code-display">
-                  <strong id="myInviteCode">VA-8492</strong>
+                  <strong id="myInviteCode">VA-····</strong>
                   <button class="btn btn-secondary btn-sm" id="btnCopyCode">
                     <i data-lucide="copy"></i> Copiar
                   </button>
                 </div>
               </div>
 
-              <div class="partner-link-form">
+              <div class="partner-link-form" id="partnerLinkForm">
                 <label for="partnerCodeInput">Vincular con código de tu pareja:</label>
                 <div class="input-inline">
                   <input type="text" id="partnerCodeInput" placeholder="Ej: VA-1234">
                   <button class="btn btn-primary btn-sm" id="btnLinkPartner">Vincular</button>
                 </div>
+              </div>
+
+              <!-- Partner Linked Status -->
+              <div class="partner-linked-status hidden" id="partnerLinkedStatus">
+                <div class="partner-linked-info">
+                  <div class="partner-linked-avatar" id="partnerLinkedAvatar">PA</div>
+                  <div class="partner-linked-details">
+                    <span class="partner-linked-label">Cuenta vinculada con</span>
+                    <strong class="partner-linked-name" id="partnerLinkedName">Pareja</strong>
+                  </div>
+                  <span class="partner-linked-badge"><i data-lucide="check-circle-2"></i> Conectado</span>
+                </div>
+                <button class="btn btn-outline-danger btn-sm" id="btnUnlinkPartner">
+                  <i data-lucide="trash-2"></i> Desvincular
+                </button>
               </div>
             </div>
 

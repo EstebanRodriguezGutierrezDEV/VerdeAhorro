@@ -51,6 +51,79 @@ function getUserModes(user) {
   }
 }
 
+function generateInviteCode() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = 'VA-';
+  for (let i = 0; i < 4; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
+function getUserInviteCode(userId) {
+  const key = `verde_invite_code_${userId || 'default'}`;
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved) return saved;
+    const newCode = generateInviteCode();
+    localStorage.setItem(key, newCode);
+    return newCode;
+  } catch (e) {
+    return generateInviteCode();
+  }
+}
+
+function saveLinkedPartner(userId, partnerData) {
+  const key = `verde_linked_partner_${userId || 'default'}`;
+  try {
+    localStorage.setItem(key, JSON.stringify(partnerData));
+  } catch (e) {}
+}
+
+function getLinkedPartner(userId) {
+  const key = `verde_linked_partner_${userId || 'default'}`;
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function removeLinkedPartner(userId) {
+  const key = `verde_linked_partner_${userId || 'default'}`;
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {}
+}
+
+function updatePartnerLinkedUI(partnerData) {
+  const statusEl = document.getElementById('partnerLinkedStatus');
+  const linkForm = document.getElementById('partnerLinkForm');
+  const inviteCodeBox = document.getElementById('inviteCodeBox');
+  const coupleCardDesc = document.getElementById('coupleCardDesc');
+  const avatarEl = document.getElementById('partnerLinkedAvatar');
+  const nameEl = document.getElementById('partnerLinkedName');
+
+  if (partnerData && partnerData.name) {
+    const name = partnerData.name;
+    if (avatarEl) avatarEl.textContent = name.substring(0, 2).toUpperCase();
+    if (nameEl) nameEl.textContent = name;
+    statusEl?.classList.remove('hidden');
+    linkForm?.classList.add('hidden');
+    inviteCodeBox?.classList.add('hidden');
+    coupleCardDesc?.classList.add('hidden');
+    createIcons({
+      icons: { CheckCircle2, Trash2 }
+    });
+  } else {
+    statusEl?.classList.add('hidden');
+    linkForm?.classList.remove('hidden');
+    inviteCodeBox?.classList.remove('hidden');
+    coupleCardDesc?.classList.remove('hidden');
+  }
+}
+
 export async function renderDashboard(user) {
   currentUser = user;
 
@@ -106,6 +179,16 @@ export async function renderDashboard(user) {
   initSituationManager();
   updateSituationModeUI();
   updateCoupleModeUI();
+  // Set unique invite code for this user
+  const inviteCodeEl = document.getElementById('myInviteCode');
+  if (inviteCodeEl) {
+    inviteCodeEl.textContent = getUserInviteCode(user?.id);
+  }
+  // Load linked partner status
+  const savedPartner = getLinkedPartner(user?.id);
+  if (savedPartner) {
+    updatePartnerLinkedUI(savedPartner);
+  }
   updateDashboardTotals(income);
   renderExpenseList(income);
   
@@ -553,7 +636,8 @@ function initDashboardEvents(income, goal) {
         if (btnConfirmCoupleModal) btnConfirmCoupleModal.textContent = 'Desactivar Modo Pareja';
       } else {
         modalCoupleTitle.textContent = '¿Deseas activar el Modo Pareja?';
-        modalCoupleDescText.textContent = 'Al activarlo, se mostrará tu código de invitación único (VA-8492), la vinculación 50/50 y los botones de gasto en pareja.';
+        const userCode = getUserInviteCode(currentUser?.id);
+        modalCoupleDescText.textContent = `Al activarlo, se mostrará tu código de invitación único (${userCode}), la vinculación 50/50 y los botones de gasto en pareja.`;
         if (btnConfirmCoupleModal) btnConfirmCoupleModal.textContent = 'Activar Modo Pareja 💑';
       }
     }
@@ -704,7 +788,7 @@ function initDashboardEvents(income, goal) {
   // Copy partner invite code listener
   const btnCopyCode = document.getElementById('btnCopyCode');
   btnCopyCode?.addEventListener('click', () => {
-    const code = document.getElementById('myInviteCode')?.textContent || 'VA-8492';
+    const code = document.getElementById('myInviteCode')?.textContent || getUserInviteCode(currentUser?.id);
     navigator.clipboard.writeText(code);
     alert(`Código ${code} copiado al portapapeles. ¡Envíaselo a tu pareja!`);
   });
@@ -712,13 +796,29 @@ function initDashboardEvents(income, goal) {
   // Partner Link listener
   const btnLinkPartner = document.getElementById('btnLinkPartner');
   btnLinkPartner?.addEventListener('click', () => {
-    const partnerCode = document.getElementById('partnerCodeInput')?.value;
+    const partnerCode = document.getElementById('partnerCodeInput')?.value?.trim();
     if (!partnerCode) {
       alert('Introduce el código de tu pareja para vincular las cuentas.');
       return;
     }
-    alert(`¡Cuentas vinculadas con éxito mediante el código ${partnerCode}! Modo Pareja activado.`);
+    const partnerName = prompt('¿Cuál es el nombre de tu pareja?');
+    if (!partnerName || !partnerName.trim()) {
+      return;
+    }
+    const partnerData = { name: partnerName.trim(), code: partnerCode };
+    saveLinkedPartner(currentUser?.id, partnerData);
+    updatePartnerLinkedUI(partnerData);
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.5 } });
+  });
+
+  // Unlink Partner listener
+  const btnUnlinkPartner = document.getElementById('btnUnlinkPartner');
+  btnUnlinkPartner?.addEventListener('click', () => {
+    if (confirm('¿Estás seguro de que quieres desvincular la cuenta de tu pareja?')) {
+      removeLinkedPartner(currentUser?.id);
+      updatePartnerLinkedUI(null);
+      document.getElementById('partnerCodeInput').value = '';
+    }
   });
 }
 
