@@ -1,11 +1,7 @@
-import { supabase } from './supabase';
-import { sanitizeInput, sanitizeHTML, sanitizeNumber, isValidEmail, validatePassword, getSafeErrorMessage } from './security';
+import { supabase } from '../config/supabase.js';
+import { sanitizeInput, sanitizeNumber, isValidEmail, validatePassword, getSafeErrorMessage } from '../utils/security.js';
 
-/**
- * Registra un nuevo usuario en Supabase con sus metadatos de presupuesto
- */
 export async function registerUser({ name, email, password, income, goal }) {
-  // ── Validación y sanitización de entrada ──
   if (!isValidEmail(email)) {
     return { success: false, error: 'El formato del email no es válido.' };
   }
@@ -34,7 +30,13 @@ export async function registerUser({ name, email, password, income, goal }) {
     if (error) {
       console.warn('[Auth] Registro fallido');
       
-      // Si el error es por envío de email o límite de SMTP de Supabase, creamos el perfil directamente
+      const errorCode = error.code || error.error_code || '';
+      const fallbackCodes = ['over_request_rate_limit', 'email_provider_disabled', 'email_rate_limit_exceeded'];
+      
+      if (!fallbackCodes.includes(errorCode)) {
+        return { success: false, error: getSafeErrorMessage(error) };
+      }
+
       const userId = 'user-' + Date.now();
       const userObj = {
         id: userId,
@@ -68,7 +70,6 @@ export async function registerUser({ name, email, password, income, goal }) {
       }
     };
 
-    // Intentar guardar en la tabla 'profiles' de Supabase con el esquema exacto
     try {
       const profileData = {
         id: userId,
@@ -95,9 +96,6 @@ export async function registerUser({ name, email, password, income, goal }) {
   }
 }
 
-/**
- * Inicia sesión con correo y contraseña en Supabase
- */
 export async function loginUser({ email, password }) {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -126,98 +124,10 @@ export async function loginUser({ email, password }) {
   }
 }
 
-/**
- * Obtener gastos de la base de datos de Supabase
- */
-export async function fetchExpensesFromSupabase(userId) {
-  try {
-    const { data, error } = await supabase
-      .from('expenses')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    return data || [];
-  } catch (err) {
-    console.warn('[DB] Error al cargar gastos');
-    return null;
-  }
-}
-
-/**
- * Guardar un nuevo gasto en la base de datos de Supabase
- */
-export async function saveExpenseToSupabase(userId, expense) {
-  // Sanitizar datos del gasto antes de enviar a BD
-  const safeTitle = sanitizeInput(expense.title || '');
-  const safeAmount = sanitizeNumber(expense.amount, { min: 0.01, max: 99999 });
-  const safeCategory = sanitizeInput(expense.category || 'fixed');
-
-  try {
-    const { data, error } = await supabase
-      .from('expenses')
-      .insert([
-        {
-          user_id: userId,
-          title: safeTitle,
-          amount: safeAmount,
-          notes: safeCategory,
-          is_shared: !!expense.isShared,
-          expense_date: expense.date || new Date().toISOString().split('T')[0]
-        }
-      ])
-      .select();
-
-    if (error) throw error;
-    return { success: true, data };
-  } catch (err) {
-    console.warn('[DB] Error al guardar gasto');
-    return { success: false, error: err.message };
-  }
-}
-
-/**
- * Eliminar gasto en Supabase
- */
-export async function deleteExpenseFromSupabase(expenseId) {
-  try {
-    const { error } = await supabase
-      .from('expenses')
-      .delete()
-      .eq('id', expenseId);
-
-    if (error) throw error;
-    return { success: true };
-  } catch (err) {
-    console.warn('[DB] Error al eliminar gasto');
-    return { success: false, error: err.message };
-  }
-}
-
-/**
- * Cierra la sesión activa
- */
 export async function logoutUser() {
   try {
     await supabase.auth.signOut();
   } catch (e) {
     console.log('Sesión cerrada');
-  }
-}
-
-/**
- * Guarda el estado activo de los modos (Modo Colchón / Modo Pareja) en Supabase
- */
-export async function saveUserModesToSupabase(modes) {
-  try {
-    const { data, error } = await supabase.auth.updateUser({
-      data: {
-        active_modes: modes
-      }
-    });
-    return { success: !error };
-  } catch (e) {
-    return { success: false };
   }
 }
